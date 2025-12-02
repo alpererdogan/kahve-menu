@@ -7,7 +7,7 @@
   <style>
     body {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #3b2f2f, #7b4b2a);
+      background: linear-gradient(135deg, #5a00b3, #b65cff); /* MOR ARKA PLAN */
       margin: 0;
       padding: 0;
       display: flex;
@@ -18,7 +18,7 @@
     }
 
     .card {
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.55);
       padding: 24px;
       border-radius: 16px;
       max-width: 420px;
@@ -35,7 +35,7 @@
     p.desc {
       text-align: center;
       font-size: 0.95rem;
-      color: #ddd;
+      color: #eee;
     }
 
     label {
@@ -114,11 +114,9 @@
     <p class="desc">Hoş geldin! Aşağıdan kahveni seç, ben senin için hazırlayayım.</p>
 
     <form id="coffeeForm">
-      <!-- Misafir adı -->
       <label for="name">Adın nedir?</label>
       <input type="text" id="name" placeholder="Örn: Ayşe" />
 
-      <!-- Kahve türü -->
       <label for="type">Hangi kahveyi istersin?</label>
       <select id="type">
         <option value="Türk kahvesi">Türk kahvesi</option>
@@ -129,7 +127,6 @@
         <option value="Filtre kahve">Filtre kahve</option>
       </select>
 
-      <!-- Şeker ve yoğunluk aynı satırda -->
       <div class="row">
         <div>
           <label for="sugar">Şeker durumu</label>
@@ -150,21 +147,26 @@
         </div>
       </div>
 
-      <!-- Süt -->
       <div class="checkbox-group">
         <input type="checkbox" id="milk" />
         <label for="milk" style="margin: 0;">Süt olsun mu?</label>
       </div>
 
-      <!-- Notlar -->
+      <!-- ŞURUP MENÜSÜ -->
+      <label for="syrup">Şurup ister misin?</label>
+      <select id="syrup">
+        <option value="şurupsuz">Şurupsuz</option>
+        <option value="Vanilya">Vanilya</option>
+        <option value="Fındık">Fındık</option>
+        <option value="Çikolata sosu">Çikolata sosu</option>
+      </select>
+
       <label for="note">Eklemek istediğin bir not var mı?</label>
       <textarea id="note" placeholder="Örn: Bardak çok sıcak olmasın, köpüğü bol olsun..."></textarea>
 
-      <!-- Buton -->
       <button type="submit">Kahvemi Hazırla</button>
     </form>
 
-    <!-- Sonuç -->
     <div class="result" id="resultBox"></div>
   </div>
 
@@ -173,39 +175,37 @@
     const resultBox = document.getElementById("resultBox");
 
     form.addEventListener("submit", function (e) {
-      e.preventDefault(); // Sayfanın yenilenmesini engelle
+      e.preventDefault();
 
       const name = document.getElementById("name").value.trim();
       const type = document.getElementById("type").value;
       const sugar = document.getElementById("sugar").value;
       const strength = document.getElementById("strength").value;
       const milk = document.getElementById("milk").checked;
+      const syrup = document.getElementById("syrup").value;
       const note = document.getElementById("note").value.trim();
 
       const displayName = name === "" ? "Misafir" : name;
       const milkText = milk ? "sütlü" : "sütsüz";
 
-      // Ekranda gözükecek mesaj (HTML'li)
-      let htmlMessage = `<strong>${displayName}</strong> için: ${strength} içimli, ${sugar}, ${milkText} <strong>${type}</strong>.`;
+      let htmlMessage = `<strong>${displayName}</strong> için: ${strength} içimli, ${sugar}, ${milkText}, şurup: <strong>${syrup}</strong> <strong>${type}</strong>.`;
       if (note !== "") {
         htmlMessage += `<br><br><strong>Not:</strong> ${note}`;
       }
 
-      // WhatsApp'a gidecek düz yazı
       let waMessage = `${displayName} için kahve siparişi:
 - Kahve: ${type}
 - Yoğunluk: ${strength}
 - Şeker: ${sugar}
-- Süt: ${milkText}`;
+- Süt: ${milkText}
+- Şurup: ${syrup}`;
       if (note !== "") {
         waMessage += `\n- Not: ${note}`;
       }
 
-      // Sonucu sayfada göster
       resultBox.innerHTML = htmlMessage;
       resultBox.style.display = "block";
 
-      // 💬 SENİN NUMARAN (başında 0 yok, + yok)
       const phoneNumber = "905335666779";
 
       const waUrl =
@@ -214,7 +214,6 @@
         "?text=" +
         encodeURIComponent(waMessage);
 
-      // Yeni sekmede WhatsApp Web / uygulama aç
       window.open(waUrl, "_blank");
     });
   </script>
